@@ -4,18 +4,22 @@
     <title>OAuth Callback</title>
     <script>
         window.onload = function() {
-            // Get the authorization code from the URL
+            console.log('Page loaded');
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
+            console.log('Code:', code);
             
-            // Redirect back to your app with the code
             if (code) {
-                window.location.href = `misfits://callback?code=${code}`;
+                const redirectUrl = `iotmisfits://callback?code=${code}`;
+                console.log('Redirecting to:', redirectUrl);
+                window.location.href = redirectUrl;
+            } else {
+                document.body.innerHTML += '<p>Error: No authorization code found</p>';
             }
         }
     </script>
 </head>
 <body>
-    <p>Redirecting back to app...</p>
+    <p>Connecting to IOT Misfits app...</p>
 </body>
 </html>

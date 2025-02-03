@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OAuth Callback</title>
+    <script>
+        window.onload = function() {
+            // Get the authorization code from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            
+            // Redirect back to your app with the code
+            if (code) {
+                window.location.href = `misfits://callback?code=${code}`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <p>Redirecting back to app...</p>
+</body>
+</html>

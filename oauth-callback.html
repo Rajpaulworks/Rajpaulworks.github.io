@@ -4,22 +4,31 @@
     <title>OAuth Callback</title>
     <script>
         window.onload = function() {
-            console.log('Page loaded');
+            console.log('Callback page loaded');
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
-            console.log('Code:', code);
+            const error = urlParams.get('error');
+            
+            if (error) {
+                console.error('Received error:', error);
+                document.body.innerHTML += '<p>Error: ' + error + '</p>';
+                return;
+            }
             
             if (code) {
+                console.log('Received code:', code);
                 const redirectUrl = `iotmisfits://callback?code=${code}`;
                 console.log('Redirecting to:', redirectUrl);
                 window.location.href = redirectUrl;
             } else {
-                document.body.innerHTML += '<p>Error: No authorization code found</p>';
+                console.error('No code found in URL');
+                document.body.innerHTML += '<p>Error: No authorization code received</p>';
             }
         }
     </script>
 </head>
 <body>
-    <p>Connecting to IOT Misfits app...</p>
+    <h1>Connecting to IOT Misfits...</h1>
+    <p>Please wait while we complete the authentication.</p>
 </body>
 </html>

@@ -9,26 +9,42 @@
             const code = urlParams.get('code');
             const error = urlParams.get('error');
             
+            document.getElementById('status').textContent = 'Processing...';
+            
             if (error) {
-                console.error('Received error:', error);
-                document.body.innerHTML += '<p>Error: ' + error + '</p>';
+                console.error('Error:', error);
+                document.getElementById('status').textContent = 'Error: ' + error;
                 return;
             }
             
             if (code) {
-                console.log('Received code:', code);
-                const redirectUrl = `iotmisfits://callback?code=${code}`;
-                console.log('Redirecting to:', redirectUrl);
-                window.location.href = redirectUrl;
+                console.log('Code received:', code);
+                document.getElementById('status').textContent = 'Code received, redirecting...';
+                
+                // Try both URL schemes
+                try {
+                    window.location.href = `iotmisfits://callback?code=${code}`;
+                } catch (e) {
+                    console.error('Failed primary redirect:', e);
+                    try {
+                        // Fallback
+                        window.location.replace(`iotmisfits://callback?code=${code}`);
+                    } catch (e2) {
+                        console.error('Failed fallback redirect:', e2);
+                        document.getElementById('status').textContent = 'Redirect failed. Please return to the app.';
+                    }
+                }
             } else {
-                console.error('No code found in URL');
-                document.body.innerHTML += '<p>Error: No authorization code received</p>';
+                console.log('No code found');
+                document.getElementById('status').textContent = 'No authorization code received';
             }
         }
     </script>
 </head>
 <body>
-    <h1>Connecting to IOT Misfits...</h1>
-    <p>Please wait while we complete the authentication.</p>
+    <h1>IOT Misfits Authorization</h1>
+    <p>Processing Garmin authentication...</p>
+    <div id="status" style="margin-top: 20px; color: blue;"></div>
+    <div id="debug" style="margin-top: 20px; font-family: monospace;"></div>
 </body>
 </html>

@@ -23,12 +23,12 @@
                 
                 // Try both URL schemes
                 try {
-                    window.location.href = `iotmisfits://callback?code=${code}`;
+                    window.location.href = `misfits://callback?code=${code}`;
                 } catch (e) {
                     console.error('Failed primary redirect:', e);
                     try {
                         // Fallback
-                        window.location.replace(`iotmisfits://callback?code=${code}`);
+                        window.location.replace(`misfits://callback?code=${code}`);
                     } catch (e2) {
                         console.error('Failed fallback redirect:', e2);
                         document.getElementById('status').textContent = 'Redirect failed. Please return to the app.';

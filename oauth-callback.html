@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>IOT Misfits Authorization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
     <h1>IOT Misfits Authorization</h1>
@@ -9,19 +10,29 @@
 
     <script>
         window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('oauth_token');
-            const verifier = urlParams.get('oauth_verifier');
-            
-            if (code && verifier) {
-                console.log('Authorization code received:', code);
-                console.log('Verifier received:', verifier);
+            try {
+                console.log('Processing callback...');
+                const urlParams = new URLSearchParams(window.location.search);
+                const code = urlParams.get('oauth_token');
+                const verifier = urlParams.get('oauth_verifier');
                 
-                // Redirect back to the app with the auth code and verifier
-                window.location.href = `misfits://oauth-callback?oauth_token=${code}&oauth_verifier=${verifier}`;
-            } else {
-                document.getElementById('status').textContent = 'No authorization code received';
-                console.error('No authorization code or verifier in URL parameters');
+                console.log('URL Parameters:', urlParams.toString());
+                
+                if (code && verifier) {
+                    console.log('Authorization code received:', code);
+                    console.log('Verifier received:', verifier);
+                    
+                    // Redirect back to the app
+                    const redirectUrl = `misfits://oauth-callback?oauth_token=${code}&oauth_verifier=${verifier}`;
+                    console.log('Redirecting to:', redirectUrl);
+                    window.location.href = redirectUrl;
+                } else {
+                    document.getElementById('status').textContent = 'No authorization code received';
+                    console.error('No authorization code or verifier in URL parameters');
+                }
+            } catch (error) {
+                console.error('Error processing callback:', error);
+                document.getElementById('status').textContent = 'Error processing authorization';
             }
         };
     </script>

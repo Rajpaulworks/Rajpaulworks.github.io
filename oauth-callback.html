@@ -1,40 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>IOT Misfits Authorization</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>IOT Misfits Authorization</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
-    <h1>IOT Misfits Authorization</h1>
-    <p id="status">Processing Garmin authentication...</p>
+  <h1>IOT Misfits Authorization</h1>
+  <p id="status">Processing Garmin authentication...</p>
 
-    <script>
-        window.onload = function() {
-            try {
-                console.log('Processing callback...');
-                const urlParams = new URLSearchParams(window.location.search);
-                const code = urlParams.get('oauth_token');
-                const verifier = urlParams.get('oauth_verifier');
-                
-                console.log('URL Parameters:', urlParams.toString());
-                
-                if (code && verifier) {
-                    console.log('Authorization code received:', code);
-                    console.log('Verifier received:', verifier);
-                    
-                    // Redirect back to the app
-                    const redirectUrl = `misfits://oauth-callback?oauth_token=${code}&oauth_verifier=${verifier}`;
-                    console.log('Redirecting to:', redirectUrl);
-                    window.location.href = redirectUrl;
-                } else {
-                    document.getElementById('status').textContent = 'No authorization code received';
-                    console.error('No authorization code or verifier in URL parameters');
-                }
-            } catch (error) {
-                console.error('Error processing callback:', error);
-                document.getElementById('status').textContent = 'Error processing authorization';
-            }
-        };
-    </script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("oauth_token");
+    const verifier = params.get("oauth_verifier");
+
+    if (token && verifier) {
+      document.getElementById("status").textContent = `✅ Auth Success: Token = ${token}, Verifier = ${verifier}`;
+
+      // Optional: Redirect back into your app
+      // window.location.href = `myapp://auth?oauth_token=${token}&oauth_verifier=${verifier}`;
+    } else {
+      document.getElementById("status").textContent = "❌ No authorization code received.";
+    }
+  </script>
 </body>
 </html>

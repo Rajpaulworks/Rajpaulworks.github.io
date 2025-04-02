@@ -1,50 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>OAuth Callback</title>
-    <script>
-        window.onload = function() {
-            console.log('Callback page loaded');
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            const error = urlParams.get('error');
-            
-            document.getElementById('status').textContent = 'Processing...';
-            
-            if (error) {
-                console.error('Error:', error);
-                document.getElementById('status').textContent = 'Error: ' + error;
-                return;
-            }
-            
-            if (code) {
-                console.log('Code received:', code);
-                document.getElementById('status').textContent = 'Code received, redirecting...';
-                
-                // Try both URL schemes
-                try {
-                    window.location.href = `misfits://callback?code=${code}`;
-                } catch (e) {
-                    console.error('Failed primary redirect:', e);
-                    try {
-                        // Fallback
-                        window.location.replace(`misfits://callback?code=${code}`);
-                    } catch (e2) {
-                        console.error('Failed fallback redirect:', e2);
-                        document.getElementById('status').textContent = 'Redirect failed. Please return to the app.';
-                    }
-                }
-            } else {
-                console.log('No code found');
-                document.getElementById('status').textContent = 'No authorization code received';
-            }
-        }
-    </script>
+    <title>IOT Misfits Authorization</title>
 </head>
 <body>
     <h1>IOT Misfits Authorization</h1>
-    <p>Processing Garmin authentication...</p>
-    <div id="status" style="margin-top: 20px; color: blue;"></div>
-    <div id="debug" style="margin-top: 20px; font-family: monospace;"></div>
+    <p id="status">Processing Garmin authentication...</p>
+
+    <script>
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('oauth_token');
+            const verifier = urlParams.get('oauth_verifier');
+            
+            if (code && verifier) {
+                console.log('Authorization code received:', code);
+                console.log('Verifier received:', verifier);
+                
+                // Redirect back to the app with the auth code and verifier
+                window.location.href = `misfits://oauth-callback?oauth_token=${code}&oauth_verifier=${verifier}`;
+            } else {
+                document.getElementById('status').textContent = 'No authorization code received';
+                console.error('No authorization code or verifier in URL parameters');
+            }
+        };
+    </script>
 </body>
 </html>
